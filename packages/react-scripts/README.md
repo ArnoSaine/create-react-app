@@ -1,6 +1,6 @@
 # @arnosaine/react-scripts
 
-A tiny fork of `react-scripts` that enables modifying the internal Babel, ESLint and Webpack configs.
+A tiny fork of `react-scripts` that enables modifying the internal Babel, ESLint and Webpack configs without ejecting.
 
 ## Usage
 

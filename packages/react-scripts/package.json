@@ -1,14 +1,14 @@
 {
   "name": "@arnosaine/react-scripts",
   "version": "0.1.0",
-  "description": "Configuration and scripts for Create React App.",
-  "repository": "facebook/create-react-app",
+  "description": "A tiny fork of react-scripts that enables modifying the internal Babel, ESLint and Webpack configs without ejecting.",
+  "repository": "ArnoSaine/create-react-app",
   "license": "MIT",
   "engines": {
     "node": ">=6"
   },
   "bugs": {
-    "url": "https://github.com/facebook/create-react-app/issues"
+    "url": "https://github.com/ArnoSaine/create-react-app/issues"
   },
   "files": [
     "bin",
