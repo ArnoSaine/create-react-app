@@ -657,3 +657,5 @@ module.exports = function(webpackEnv) {
     performance: false,
   };
 };
+
+require('./extend')(module);
