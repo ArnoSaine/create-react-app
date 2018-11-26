@@ -8,6 +8,9 @@ module.exports = config => {
   equals(options.babelrc, false, 'babelrc');
   delete options.babelrc;
 
+  equals(options.configFile, false, 'babel.config.js');
+  delete options.configFile;
+
   equals(!options.cacheIdentifier, false, 'cacheIdentifier');
   delete options.cacheIdentifier;
 
