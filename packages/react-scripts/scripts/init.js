@@ -21,6 +21,7 @@ const execSync = require('child_process').execSync;
 const spawn = require('react-dev-utils/crossSpawn');
 const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
+const merge = require('deepmerge');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
 
 function isInGitRepository() {
@@ -174,6 +175,21 @@ module.exports = function(
       })
     );
     fs.unlinkSync(templateDependenciesPath);
+
+    const {
+      dependencies,
+      ...packageJsonWithoutDependencies
+    } = require(templateDependenciesPath);
+
+    const appPackagePath = path.join(appPath, 'package.json');
+    fs.writeFileSync(
+      appPackagePath,
+      JSON.stringify(
+        merge(fs.readJsonSync(appPackagePath), packageJsonWithoutDependencies),
+        null,
+        2
+      ) + os.EOL
+    );
   }
 
   // Install react and react-dom for backward compatibility with old CRA cli
