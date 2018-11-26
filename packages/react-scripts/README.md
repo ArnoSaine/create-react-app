@@ -8,6 +8,12 @@ A tiny fork of `react-scripts` that enables modifying the internal Babel, ESLint
 npx create-react-app --scripts-version @arnosaine/react-scripts my-app
 ```
 
+### Install other included templates
+
+```sh
+npx create-react-app --scripts-version @arnosaine/react-scripts --internal-testing-template ./my-app/node_modules/@visma/create-react-app-template/template my-app
+```
+
 ## Examples
 
 `.babelrc`:
