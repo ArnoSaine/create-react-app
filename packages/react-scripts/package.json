@@ -1,6 +1,6 @@
 {
   "name": "@arnosaine/react-scripts",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A tiny fork of react-scripts that enables modifying the internal Babel, ESLint and Webpack configs without ejecting.",
   "repository": "ArnoSaine/create-react-app",
   "license": "MIT",
