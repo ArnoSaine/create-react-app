@@ -35,15 +35,15 @@ npx create-react-app --scripts-version @arnosaine/react-scripts --internal-testi
 }
 ```
 
-`webpack.config.js`:
+`webpack.config.mjs`:
 
 Export function that takes `env` and returns function. Returned function takes the internal Webpack config that can be modified and finally returned.
 See [react-scripts webpack.config.js](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js) for config structure.
 
 ```js
-const path = require('path');
+import path from 'path';
 
-module.exports = env => config => {
+export default env => config => {
   const { oneOf } = config.module.rules[2];
   // Last rule should be original file-loader fallback. Insert new rules just
   // before last rule.
