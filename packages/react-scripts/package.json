@@ -25,6 +25,7 @@
   "types": "./lib/react-app.d.ts",
   "dependencies": {
     "@babel/core": "7.1.6",
+    "@babel/register": "^7.0.0",
     "@svgr/webpack": "2.4.1",
     "@visma/create-react-app-template": "^0.3.0",
     "babel-core": "7.0.0-bridge.0",
