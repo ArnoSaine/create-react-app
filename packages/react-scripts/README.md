@@ -16,7 +16,7 @@ npx create-react-app --scripts-version @arnosaine/react-scripts --internal-testi
 
 ## Examples
 
-`.babelrc`:
+### `.babelrc`
 
 ```json
 {
@@ -24,7 +24,7 @@ npx create-react-app --scripts-version @arnosaine/react-scripts --internal-testi
 }
 ```
 
-`.eslintrc.json`:
+### `.eslintrc.json`
 
 ```json
 {
@@ -35,10 +35,37 @@ npx create-react-app --scripts-version @arnosaine/react-scripts --internal-testi
 }
 ```
 
-`webpack.config.mjs`:
+### `webpack.config.mjs`
 
 Export function that takes `env` and returns function. Returned function takes the internal Webpack config that can be modified and finally returned.
 See [react-scripts webpack.config.js](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js) for config structure.
+
+#### Add `dotenv-webpack` plugin
+
+```js
+import Dotenv from 'dotenv-webpack';
+
+export default _env => config => {
+  config.plugins.push(new Dotenv());
+
+  return config;
+};
+```
+
+#### Edit output path
+
+```js
+import path from 'path';
+import paths from '@arnosaine/react-scripts/config/paths';
+
+paths.appBuild = path.resolve(process.cwd(), 'other/output/path');
+
+export default _env => config => {
+  return config;
+};
+```
+
+#### Add `.properties` loader
 
 ```js
 import path from 'path';
@@ -51,8 +78,6 @@ export default env => config => {
     test: /\.properties$/,
     loader: 'properties-loader',
   });
-
-  config.output.path = path.resolve(__dirname, 'other/output/path');
 
   return config;
 };
