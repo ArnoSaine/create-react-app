@@ -4,7 +4,7 @@ A tiny fork of `react-scripts` that enables modifying the internal Babel, ESLint
 
 ## Usage
 
-### Create new
+### Create new project
 
 ```sh
 npx create-react-app --scripts-version @arnosaine/react-scripts my-app
