@@ -1,0 +1,8 @@
+version: '1'
+rules:
+  - base: master
+    upstream: facebook:master
+    autoMerge: true
+  - base: facebook-master
+    upstream: facebook:master
+    autoMerge: true
