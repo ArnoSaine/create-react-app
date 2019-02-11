@@ -151,16 +151,24 @@ module.exports = function(
   }
 
   let command;
-  let args;
+  const args = {};
 
   if (useYarn) {
     command = 'yarnpkg';
-    args = ['add'];
+    args.dependencies = ['add'];
+    args.devDependencies = ['add', '--dev'];
   } else {
     command = 'npm';
-    args = ['install', '--save', verbose && '--verbose'].filter(e => e);
+    args.dependencies = ['install', '--save', verbose && '--verbose'].filter(
+      e => e
+    );
+    args.devDependencies = [
+      'install',
+      '--save-dev',
+      verbose && '--verbose',
+    ].filter(e => e);
   }
-  args.push('react', 'react-dom');
+  args.dependencies.push('react', 'react-dom');
 
   // Install additional template dependencies, if present
   const templateDependenciesPath = path.join(
@@ -168,18 +176,24 @@ module.exports = function(
     '.template.dependencies.json'
   );
   if (fs.existsSync(templateDependenciesPath)) {
-    const templateDependencies = require(templateDependenciesPath).dependencies;
-    args = args.concat(
-      Object.keys(templateDependencies).map(key => {
-        return `${key}@${templateDependencies[key]}`;
-      })
-    );
+    const packageJson = require(templateDependenciesPath);
+    for (const type of ['dependencies', 'devDependencies']) {
+      const dependencies = packageJson[type];
+      if (dependencies) {
+        args[type].push(
+          ...Object.entries(dependencies).map(
+            ([key, version]) => `${key}@${version}`
+          )
+        );
+      }
+    }
     fs.unlinkSync(templateDependenciesPath);
 
     const {
       dependencies,
+      devDependencies,
       ...packageJsonWithoutDependencies
-    } = require(templateDependenciesPath);
+    } = packageJson;
 
     const appPackagePath = path.join(appPath, 'package.json');
     fs.writeFileSync(
@@ -199,11 +213,13 @@ module.exports = function(
     console.log(`Installing react and react-dom using ${command}...`);
     console.log();
 
-    const proc = spawn.sync(command, args, { stdio: 'inherit' });
-    if (proc.status !== 0) {
-      console.error(`\`${command} ${args.join(' ')}\` failed`);
-      return;
-    }
+    Object.values(args).forEach(argsValue => {
+      let proc = spawn.sync(command, argsValue, { stdio: 'inherit' });
+      if (proc.status !== 0) {
+        console.error(`\`${command} ${argsValue.join(' ')}\` failed`);
+        return;
+      }
+    });
   }
 
   if (useTypeScript) {
