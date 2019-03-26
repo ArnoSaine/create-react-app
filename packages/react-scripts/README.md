@@ -101,3 +101,22 @@ export default env => config => {
   return config;
 };
 ```
+
+#### Transpile JSX and other syntax in `node_modules`
+
+```js
+import path from 'path';
+
+export default env => config => {
+  const rules = config.module.rules[2].oneOf;
+  const babel = rules[1];
+  const { include } = babel;
+
+  babel.include = [
+    include,
+    path.join(process.cwd(), 'node_modules/some-package'),
+  ];
+
+  return config;
+};
+```
