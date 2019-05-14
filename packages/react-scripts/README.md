@@ -90,10 +90,10 @@ export default _env => config => {
 import path from 'path';
 
 export default env => config => {
-  const { oneOf } = config.module.rules[2];
+  const { oneOf: rules } = config.module.rules[2];
   // Last rule should be original file-loader fallback. Insert new rules just
   // before last rule.
-  oneOf.splice(oneOf.length - 2, 0, {
+  rules.splice(rules.length - 2, 0, {
     test: /\.properties$/,
     loader: 'properties-loader',
   });
@@ -108,7 +108,7 @@ export default env => config => {
 import path from 'path';
 
 export default env => config => {
-  const rules = config.module.rules[2].oneOf;
+  const { oneOf: rules } = config.module.rules[2];
   const babel = rules[1];
   const { include } = babel;
 
@@ -116,6 +116,25 @@ export default env => config => {
     include,
     path.join(process.cwd(), 'node_modules/some-package'),
   ];
+
+  return config;
+};
+```
+
+#### Add Webpack alias fields
+
+Useful when developing components with `npm link`.
+
+```js
+import path from 'path';
+
+export default env => config => {
+  const {
+    resolve: { alias },
+  } = config;
+
+  alias.react = path.resolve('./node_modules/react');
+  alias['react-dom'] = path.resolve('./node_modules/react-dom');
 
   return config;
 };
