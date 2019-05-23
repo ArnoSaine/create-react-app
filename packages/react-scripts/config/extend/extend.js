@@ -4,19 +4,20 @@ const babel = require('./babel');
 const eslint = require('./eslint');
 
 module.exports = function(module) {
-  const custom = '../../../../../webpack.config';
-  let customConfiguration;
+  let configPath;
   try {
-    customConfiguration = require.resolve(custom);
+    configPath = require.resolve('../../../../../webpack.config');
   } catch (error) {
     // No custom config found.
   }
   const config = module.exports;
   const extended = env => babel(eslint(config(env)));
-  module.exports = customConfiguration
-    ? env =>
-        (customConfiguration.endsWith('.js')
-          ? require(custom)
-          : require(custom).default)(env)(extended(env))
+  module.exports = configPath
+    ? env => {
+        const customizer = require(configPath);
+        return (customizer.__esModule ? customizer.default : customizer)(env)(
+          extended(env)
+        );
+      }
     : extended;
 };

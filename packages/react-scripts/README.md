@@ -52,12 +52,12 @@ module.exports = {
 }
 ```
 
-### `webpack.config.mjs`
-
-`webpack.config.mjs` and `webpack.config.js` are supported.
+### `webpack.config.js`
 
 Export function that takes `env` and returns function. Returned function takes the internal Webpack config that can be modified and finally returned.
 See [react-scripts webpack.config.js](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js) for config structure.
+
+ES module syntax is supported.
 
 #### Add `dotenv-webpack` plugin
 
