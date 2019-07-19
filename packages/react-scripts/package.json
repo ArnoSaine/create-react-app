@@ -30,9 +30,9 @@
   "dependencies": {
     "@babel/core": "7.4.3",
     "@babel/register": "^7.4.0",
-    "@svgr/webpack": "4.1.0",
-    "@typescript-eslint/eslint-plugin": "1.6.0",
-    "@typescript-eslint/parser": "1.6.0",
+    "@svgr/webpack": "4.3.1",
+    "@typescript-eslint/eslint-plugin": "1.10.2",
+    "@typescript-eslint/parser": "1.10.2",
     "@visma/create-react-app-template": "^0.4.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "^24.8.0",
@@ -78,8 +78,8 @@
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "1.2.3",
     "ts-pnp": "1.1.2",
-    "url-loader": "1.1.2",
-    "webpack": "4.29.6",
+    "url-loader": "2.0.1",
+    "webpack": "4.35.0",
     "webpack-dev-server": "3.2.1",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "4.2.0"
@@ -89,7 +89,7 @@
     "react-dom": "^16.8.4"
   },
   "optionalDependencies": {
-    "fsevents": "2.0.6"
+    "fsevents": "2.0.7"
   },
   "browserslist": {
     "production": [
