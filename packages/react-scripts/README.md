@@ -95,7 +95,7 @@ export default env => config => {
   // before last rule.
   rules.splice(rules.length - 2, 0, {
     test: /\.properties$/,
-    loader: 'properties-loader',
+    use: 'properties-loader',
   });
 
   return config;
