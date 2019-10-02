@@ -1,0 +1,24 @@
+{
+  "name": "@arnosaine/extend-react-scripts",
+  "version": "0.1.0",
+  "description": "Helper package for @arnosaine/react-scripts.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArnoSaine/create-react-app.git",
+    "directory": "packages/react-scripts"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArnoSaine/create-react-app/issues"
+  },
+  "main": "lib",
+  "module": "src",
+  "dependencies": {
+    "@visma/create-react-app-template": "^0.5.1",
+    "esm": "^3.2.25"
+  },
+  "files": [
+    "lib",
+    "src"
+  ]
+}

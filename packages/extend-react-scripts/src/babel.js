@@ -1,8 +1,6 @@
-'use strict';
+import equals from './equals';
 
-const equals = require('./equals');
-
-module.exports = config => {
+export default config => {
   const { options } = config.module.rules[2].oneOf[1];
 
   equals(options.babelrc, false, 'babelrc');

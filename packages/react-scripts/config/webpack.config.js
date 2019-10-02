@@ -731,4 +731,4 @@ module.exports = function(webpackEnv) {
   };
 };
 
-require('./extend')(module);
+require('@arnosaine/extend-react-scripts').default(module);

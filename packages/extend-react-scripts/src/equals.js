@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = function equals(actual, expected, description) {
+export default (actual, expected, description) => {
   if (actual !== expected) {
     console.log(
       `Expected ${

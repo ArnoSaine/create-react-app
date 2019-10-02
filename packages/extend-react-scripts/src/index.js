@@ -1,13 +1,11 @@
-'use strict';
+import babel from './babel';
+import eslint from './eslint';
 
-const babel = require('./babel');
-const eslint = require('./eslint');
-
-module.exports = function(module) {
+export default module => {
   let configPath;
   for (const path of [
     `${process.cwd()}/webpack.config`,
-    '../../../../../webpack.config',
+    '../../../../webpack.config',
   ]) {
     try {
       configPath = require.resolve(path);
