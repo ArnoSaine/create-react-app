@@ -14,7 +14,6 @@
   "main": "lib",
   "module": "src",
   "dependencies": {
-    "@visma/create-react-app-template": "^0.5.1",
     "esm": "^3.2.25"
   },
   "files": [
