@@ -1,7 +1,38 @@
 {
+  "scripts": {
+    "eslint": "eslint {.,src/**}/*.js --fix",
+    "lint": "npm run eslint && npm run prettier",
+    "prepack": "npm run build",
+    "prettier": "npm run prettier:write -- {.,src/**}/*.{css,graphql,html,js,json,less,md,mdx,scss,ts,yaml} !./package-lock.json",
+    "prettier:write": "prettier --config .prettierrc.js --write",
+    "preversion": "npm run lint"
+  },
   "dependencies": {
+    "@arnosaine/cra-template": "^1.0.0",
     "@testing-library/react": "^9.3.0",
     "@testing-library/jest-dom": "^4.2.0",
     "@testing-library/user-event": "^7.1.2"
+  },
+  "devDependencies": {
+    "dotenv-webpack": "1",
+    "husky": "1",
+    "lint-staged": "8"
+  },
+  "eslintConfig": {
+    "rules": {
+      "react/react-in-jsx-scope": "off"
+    }
+  },
+  "lint-staged": {
+    "*.js": ["eslint --fix", "npm run prettier:write", "git add"],
+    "*.{css,graphql,html,json,less,md,mdx,scss,ts,yaml}": [
+      "npm run prettier:write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
