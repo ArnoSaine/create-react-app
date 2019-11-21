@@ -28,7 +28,7 @@
   },
   "types": "./lib/react-app.d.ts",
   "dependencies": {
-    "@arnosaine/extend-react-scripts": "^0.1.0",
+    "@arnosaine/extend-react-scripts": "^0.2.0",
     "@babel/core": "7.7.2",
     "@svgr/webpack": "4.3.3",
     "@typescript-eslint/eslint-plugin": "^2.7.0",
