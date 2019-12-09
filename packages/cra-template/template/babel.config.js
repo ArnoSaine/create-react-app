@@ -1,3 +1,3 @@
 module.exports = {
-  presets: ['@arnosaine/cra-template/lib/babel-preset']
+  presets: ['@arnosaine/cra-template-helpers/babel-preset']
 };

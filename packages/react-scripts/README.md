@@ -20,7 +20,7 @@ npm uninstall react-scripts
 ### Install other included templates
 
 ```sh
-npx create-react-app --scripts-version @arnosaine/react-scripts --internal-testing-template ./my-app/node_modules/@visma/create-react-app-template/template my-app
+npx create-react-app --scripts-version @arnosaine/react-scripts --template @arnosaine/cra-template my-app
 ```
 
 ## Examples
