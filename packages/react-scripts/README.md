@@ -17,7 +17,7 @@ npm install @arnosaine/react-scripts
 npm uninstall react-scripts
 ```
 
-### Install other included templates
+### Use other templates
 
 ```sh
 npx create-react-app --scripts-version @arnosaine/react-scripts --template @arnosaine/cra-template my-app
@@ -45,7 +45,7 @@ module.exports = {
 
 ```json
 {
-  "extends": ["./node_modules/eslint-config-react-app/index.js"],
+  "extends": ["react-app"],
   "rules": {
     "react/react-in-jsx-scope": "off"
   }
