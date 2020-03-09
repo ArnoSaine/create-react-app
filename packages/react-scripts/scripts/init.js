@@ -42,8 +42,7 @@ function isInMercurialRepository() {
   }
 }
 
-function tryGitInit(appPath) {
-  let didInit = false;
+function tryGitInit() {
   try {
     execSync('git --version', { stdio: 'ignore' });
     if (isInGitRepository() || isInMercurialRepository()) {
@@ -51,26 +50,33 @@ function tryGitInit(appPath) {
     }
 
     execSync('git init', { stdio: 'ignore' });
-    didInit = true;
+    return true;
+  } catch (e) {
+    console.warn('Git repo not initialized', e);
+    return false;
+  }
+}
 
+function tryGitCommit(appPath) {
+  try {
     execSync('git add -A', { stdio: 'ignore' });
-    execSync('git commit -m "Initial commit from Create React App"', {
+    execSync('git commit -m "Initialize project using Create React App"', {
       stdio: 'ignore',
     });
     return true;
   } catch (e) {
-    if (didInit) {
-      // If we successfully initialized but couldn't commit,
-      // maybe the commit author config is not set.
-      // In the future, we might supply our own committer
-      // like Ember CLI does, but for now, let's just
-      // remove the Git files to avoid a half-done state.
-      try {
-        // unlinkSync() doesn't work on directories.
-        fs.removeSync(path.join(appPath, '.git'));
-      } catch (removeErr) {
-        // Ignore.
-      }
+    // We couldn't commit in already initialized git repo,
+    // maybe the commit author config is not set.
+    // In the future, we might supply our own committer
+    // like Ember CLI does, but for now, let's just
+    // remove the Git files to avoid a half-done state.
+    console.warn('Git commit not created', e);
+    console.warn('Removing .git directory...');
+    try {
+      // unlinkSync() doesn't work on directories.
+      fs.removeSync(path.join(appPath, '.git'));
+    } catch (removeErr) {
+      // Ignore.
     }
     return false;
   }
@@ -119,11 +125,14 @@ module.exports = function(
     templateJson = require(templateJsonPath);
   }
 
+  const templatePackage = templateJson.package || {};
+
   // Copy over some of the devDependencies
   appPackage.dependencies = appPackage.dependencies || {};
 
   // Setup the script rules
-  const templateScripts = templateJson.scripts || {};
+  // TODO: deprecate 'scripts' key directly on templateJson
+  const templateScripts = templatePackage.scripts || templateJson.scripts || {};
   appPackage.scripts = Object.assign(
     {
       start: 'react-scripts start',
@@ -154,7 +163,7 @@ module.exports = function(
   appPackage.browserslist = defaultBrowsers;
 
   // eslint-disable-next-line
-  const { dependencies, devDependencies, ...other } = templateJson;
+  const { dependencies, devDependencies, ...other } = templatePackage;
   Object.assign(appPackage, merge(appPackage, other));
 
   fs.writeFileSync(
@@ -211,6 +220,15 @@ module.exports = function(
     );
   }
 
+  // Initialize git repo
+  let initializedGit = false;
+
+  if (tryGitInit()) {
+    initializedGit = true;
+    console.log();
+    console.log('Initialized a git repository.');
+  }
+
   let command;
   let remove;
   let args;
@@ -229,12 +247,9 @@ module.exports = function(
   }
 
   // To make diffs cleaner, installDependencies and part2 are own functions.
-  for (const type of [
-    ['dependencies', args],
-    ['devDependencies', devArgs],
-  ]) {
+  for (const type of [['dependencies', args], ['devDependencies', devArgs]]) {
     installDependencies(
-      { appPackage, command, templateJson, templateName },
+      { appPackage, command, templateJson, templateName, templatePackage },
       type
     );
   }
@@ -243,6 +258,7 @@ module.exports = function(
     appName,
     args,
     command,
+    initializedGit,
     originalDirectory,
     readmeExists,
     remove,
@@ -252,11 +268,13 @@ module.exports = function(
 };
 
 function installDependencies(
-  { appPackage, command, templateJson, templateName },
+  { appPackage, command, templateJson, templateName, templatePackage },
   [dependencyType, args]
 ) {
   // Install additional template dependencies, if present
-  const templateDependencies = templateJson[dependencyType];
+  // TODO: deprecate 'dependencies' key directly on templateJson
+  const templateDependencies =
+    templatePackage[dependencyType] || templateJson[dependencyType];
   if (templateDependencies) {
     args = args.concat(
       Object.keys(templateDependencies).map(key => {
@@ -289,6 +307,7 @@ function part2({
   appName,
   args,
   command,
+  initializedGit,
   originalDirectory,
   readmeExists,
   remove,
@@ -312,9 +331,10 @@ function part2({
     return;
   }
 
-  if (tryGitInit(appPath)) {
+  // Create git commit if git repo was initialized
+  if (initializedGit && tryGitCommit(appPath)) {
     console.log();
-    console.log('Initialized a git repository.');
+    console.log('Created git commit.');
   }
 
   // Display the most elegant way to cd.
