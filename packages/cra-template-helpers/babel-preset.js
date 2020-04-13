@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function() {
+module.exports = function () {
   return {
     plugins: [
       // Adds syntax support for bind operator (::)
@@ -22,7 +22,10 @@ module.exports = function() {
 
       // Adds support for experimental features from stage 3
       require('@babel/plugin-syntax-import-meta').default,
-      require('@babel/plugin-proposal-private-methods').default,
+      [
+        require('@babel/plugin-proposal-private-methods').default,
+        { loose: true },
+      ],
 
       // Adds support for adding React import declaration if file contains JSX
       // tags.
