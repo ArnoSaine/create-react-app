@@ -1,6 +1,6 @@
 {
   "name": "@arnosaine/cra-template-helpers",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Helper package for @arnosaine/cra-template.",
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
     "@babel/plugin-proposal-pipeline-operator": "^7.7.4",
     "@babel/plugin-proposal-private-methods": "^7.7.4",
     "@babel/plugin-proposal-throw-expressions": "^7.7.4",
-    "@babel/plugin-syntax-import-meta": "^7.7.4",
+    "@babel/plugin-syntax-import-meta": "^7.8.3",
     "@postinumero/prettierrc": "^0.1.1",
     "babel-plugin-react-require": "^3.1.1",
     "prettier": "^1.19.1"
