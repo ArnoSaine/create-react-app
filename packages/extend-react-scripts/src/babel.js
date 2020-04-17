@@ -1,16 +1,22 @@
 import equals from './equals';
 
-export default config => {
-  const { options } = config.module.rules[2].oneOf[1];
+const babelLoader = require.resolve('babel-loader');
 
-  equals(options.babelrc, false, 'babelrc');
-  delete options.babelrc;
+export default (config) => {
+  for (const { oneOf = [] } of config.module.rules) {
+    for (const { loader, options } of oneOf) {
+      if (loader === babelLoader) {
+        equals(options.babelrc, false, 'babelrc');
+        delete options.babelrc;
 
-  equals(options.configFile, false, 'babel.config.js');
-  delete options.configFile;
+        equals(options.configFile, false, 'babel.config.js');
+        delete options.configFile;
 
-  equals(!options.cacheIdentifier, false, 'cacheIdentifier');
-  delete options.cacheIdentifier;
+        equals(!options.cacheIdentifier, false, 'cacheIdentifier');
+        delete options.cacheIdentifier;
+      }
+    }
+  }
 
   return config;
 };
