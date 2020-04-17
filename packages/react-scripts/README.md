@@ -25,7 +25,7 @@ npx create-react-app --scripts-version @arnosaine/react-scripts --template @arno
 
 ## Examples
 
-### `.babelrc`
+### `.babelrc.json`
 
 ```json
 {
@@ -64,7 +64,7 @@ ES module syntax is supported.
 ```js
 import Dotenv from 'dotenv-webpack';
 
-export default _env => config => {
+export default (_env) => (config) => {
   config.plugins.push(new Dotenv());
 
   return config;
@@ -79,7 +79,7 @@ import paths from '@arnosaine/react-scripts/config/paths';
 
 paths.appBuild = path.resolve(process.cwd(), 'other/output/path');
 
-export default _env => config => {
+export default (_env) => (config) => {
   return config;
 };
 ```
@@ -89,7 +89,7 @@ export default _env => config => {
 ```js
 import path from 'path';
 
-export default env => config => {
+export default (env) => (config) => {
   const { oneOf: rules } = config.module.rules[2];
   // Last rule should be original file-loader fallback. Insert new rules just
   // before last rule.
@@ -107,7 +107,7 @@ export default env => config => {
 ```js
 import path from 'path';
 
-export default env => config => {
+export default (env) => (config) => {
   const { oneOf: rules } = config.module.rules[2];
   const babel = rules[1];
   const { include } = babel;
@@ -123,19 +123,20 @@ export default env => config => {
 
 #### Add Webpack alias fields
 
-Useful when developing components with `npm link`.
+Useful when developing packages with `npm link`.
 
 ```js
-import path from 'path';
-
-export default env => config => {
-  const {
-    resolve: { alias },
-  } = config;
-
-  alias.react = path.resolve('./node_modules/react');
-  alias['react-dom'] = path.resolve('./node_modules/react-dom');
+function addAlias(config, ...dependencies) {
+  for (const dependency of dependencies) {
+    config.resolve.alias[dependency] = require.resolve(dependency);
+  }
 
   return config;
+}
+
+export default (env) => (config) => {
+  // ...
+
+  return addAlias(config, 'react', 'react-dom');
 };
 ```
