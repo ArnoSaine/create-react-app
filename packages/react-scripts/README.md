@@ -1,6 +1,6 @@
 # @arnosaine/react-scripts
 
-A tiny fork of `react-scripts` that enables modifying the internal Babel, ESLint and Webpack configs without ejecting.
+A tiny fork of `react-scripts`. Allows using Babel config and modifying the built-in Webpack config without ejecting.
 
 ## Usage
 
@@ -23,49 +23,47 @@ npm uninstall react-scripts
 npx create-react-app --scripts-version @arnosaine/react-scripts --template @arnosaine/cra-template my-app
 ```
 
-## Examples
+## Babel config
 
-### `.babelrc.json`
-
-```json
-{
-  "plugins": ["babel-plugin-react-require"]
-}
-```
-
-### `babel.config.js`
-
-```js
-module.exports = {
-  plugins: ['babel-plugin-react-require'],
-};
-```
-
-### `.eslintrc.json`
+Add Babel [Config File](https://babeljs.io/docs/en/config-files), for example `.babelrc.json`. It is merged to the built-in config:
 
 ```json
 {
-  "extends": ["react-app"],
-  "rules": {
-    "react/react-in-jsx-scope": "off"
-  }
+  "presets": ["@postinumero/experimental"]
 }
 ```
 
-### `webpack.config.js`
+## Webpack config
 
-Export function that takes `env` and returns function. Returned function takes the internal Webpack config that can be modified and finally returned.
-See [react-scripts webpack.config.js](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js) for config structure.
+Add `webpack.config.js`. Export a function that takes `env` and returns a function. Returned function takes the built-in Webpack config that can be modified and finally returned.
+See [webpack.config.js](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js) in `react-scripts` for the config structure.
 
 ES module syntax is supported.
+
+### Examples
 
 #### Add `dotenv-webpack` plugin
 
 ```js
 import Dotenv from 'dotenv-webpack';
 
-export default (_env) => (config) => {
-  config.plugins.push(new Dotenv());
+export default _env => config => {
+  config.plugins.push(
+    new Dotenv({
+      safe: true,
+      systemvars: true,
+    })
+  );
+
+  return config;
+};
+```
+
+#### Add [shared module resolution](https://gist.github.com/ryanflorence/daafb1e3cb8ad740b346#shared-module-resolution)
+
+```js
+export default _env => config => {
+  config.resolve.modules.push('shared');
 
   return config;
 };
@@ -79,7 +77,7 @@ import paths from '@arnosaine/react-scripts/config/paths';
 
 paths.appBuild = path.resolve(process.cwd(), 'other/output/path');
 
-export default (_env) => (config) => {
+export default _env => config => {
   return config;
 };
 ```
@@ -89,7 +87,7 @@ export default (_env) => (config) => {
 ```js
 import path from 'path';
 
-export default (env) => (config) => {
+export default env => config => {
   const { oneOf: rules } = config.module.rules[2];
   // Last rule should be original file-loader fallback. Insert new rules just
   // before last rule.
@@ -107,7 +105,7 @@ export default (env) => (config) => {
 ```js
 import path from 'path';
 
-export default (env) => (config) => {
+export default env => config => {
   const { oneOf: rules } = config.module.rules[2];
   const babel = rules[1];
   const { include } = babel;
@@ -134,7 +132,7 @@ function addAlias(config, ...dependencies) {
   return config;
 }
 
-export default (env) => (config) => {
+export default env => config => {
   // ...
 
   return addAlias(config, 'react', 'react-dom');

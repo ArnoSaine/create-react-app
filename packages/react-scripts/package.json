@@ -1,7 +1,7 @@
 {
   "name": "@arnosaine/react-scripts",
   "version": "4.0.0",
-  "description": "A tiny fork of react-scripts that enables modifying the internal Babel, ESLint and Webpack configs without ejecting.",
+  "description": "A tiny fork of react-scripts. Allows using Babel config and modifying the built-in Webpack config without ejecting.",
   "repository": {
     "type": "git",
     "url": "https://github.com/ArnoSaine/create-react-app.git",
@@ -43,7 +43,6 @@
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "css-loader": "4.3.0",
-    "deepmerge": "^4.2.2",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "eslint": "^7.11.0",

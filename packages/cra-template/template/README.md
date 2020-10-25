@@ -1,7 +1,7 @@
-> ⚠️ CRA template fork with:
+> ⚠️ Create React App template fork with:
 >
 > - Experimental Babel plugins
-> - [Customizable Webpack config](https://www.npmjs.com/package/@arnosaine/react-scripts#webpackconfigjs)
+> - [Customizable Webpack config](https://www.npmjs.com/package/@arnosaine/react-scripts#webpack-config)
 > - [Absolute imports](https://create-react-app.dev/docs/importing-a-component/#absolute-imports)
 
 # Getting Started with Create React App

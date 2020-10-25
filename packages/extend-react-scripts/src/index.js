@@ -1,21 +1,10 @@
 import babel from './babel';
-import eslint from './eslint';
+import requireResolveCwdSafe from './requireResolveCwdSafe';
 
 export default module => {
-  let configPath;
-  for (const path of [
-    `${process.cwd()}/webpack.config`,
-    '../../../../webpack.config',
-  ]) {
-    try {
-      configPath = require.resolve(path);
-      break;
-    } catch (error) {
-      // No custom config found.
-    }
-  }
+  const configPath = requireResolveCwdSafe('webpack.config');
   const config = module.exports;
-  const extended = env => babel(eslint(config(env)));
+  const extended = env => babel(config(env));
   module.exports = configPath
     ? env => {
         const customizer = require(configPath);
