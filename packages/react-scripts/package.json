@@ -1,6 +1,6 @@
 {
   "name": "@arnosaine/react-scripts",
-  "version": "4.0.0",
+  "version": "4.0.0-1",
   "description": "A tiny fork of react-scripts. Allows using Babel config and modifying the built-in Webpack config without ejecting.",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
   },
   "types": "./lib/react-app.d.ts",
   "dependencies": {
-    "@arnosaine/extend-react-scripts": "^0.2.0",
+    "@arnosaine/extend-react-scripts": "^0.3.0",
     "@babel/core": "7.12.3",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.2",
     "@svgr/webpack": "5.4.0",
