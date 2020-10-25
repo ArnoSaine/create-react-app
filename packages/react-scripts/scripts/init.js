@@ -21,7 +21,6 @@ const execSync = require('child_process').execSync;
 const spawn = require('react-dev-utils/crossSpawn');
 const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
-const merge = require('deepmerge');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
 
 function isInGitRepository() {
@@ -82,7 +81,7 @@ function tryGitCommit(appPath) {
   }
 }
 
-module.exports = function(
+module.exports = function (
   appPath,
   appName,
   verbose,
@@ -104,6 +103,13 @@ module.exports = function(
         'create-react-app'
       )} are no longer supported.`
     );
+    console.error(
+      `You can fix this by running ${chalk.cyan(
+        'npm uninstall -g create-react-app'
+      )} or ${chalk.cyan(
+        'yarn global remove create-react-app'
+      )} before using ${chalk.cyan('create-react-app')} again.`
+    );
     return;
   }
 
@@ -111,13 +117,7 @@ module.exports = function(
     require.resolve(`${templateName}/package.json`, { paths: [appPath] })
   );
 
-  let templateJsonPath;
-  if (templateName) {
-    templateJsonPath = path.join(templatePath, 'template.json');
-  } else {
-    // TODO: Remove support for this in v4.
-    templateJsonPath = path.join(appPath, '.template.dependencies.json');
-  }
+  const templateJsonPath = path.join(templatePath, 'template.json');
 
   let templateJson = {};
   if (fs.existsSync(templateJsonPath)) {
@@ -126,12 +126,69 @@ module.exports = function(
 
   const templatePackage = templateJson.package || {};
 
+  // TODO: Deprecate support for root-level `dependencies` and `scripts` in v5.
+  // These should now be set under the `package` key.
+  if (templateJson.dependencies || templateJson.scripts) {
+    console.log();
+    console.log(
+      chalk.yellow(
+        'Root-level `dependencies` and `scripts` keys in `template.json` are deprecated.\n' +
+          'This template should be updated to use the new `package` key.'
+      )
+    );
+    console.log('For more information, visit https://cra.link/templates');
+  }
+  if (templateJson.dependencies) {
+    templatePackage.dependencies = templateJson.dependencies;
+  }
+  if (templateJson.scripts) {
+    templatePackage.scripts = templateJson.scripts;
+  }
+
+  // Keys to ignore in templatePackage
+  const templatePackageBlacklist = [
+    'name',
+    'version',
+    'description',
+    'keywords',
+    'bugs',
+    'license',
+    'author',
+    'contributors',
+    'files',
+    'browser',
+    'bin',
+    'man',
+    'directories',
+    'repository',
+    'peerDependencies',
+    'bundledDependencies',
+    'optionalDependencies',
+    'engineStrict',
+    'os',
+    'cpu',
+    'preferGlobal',
+    'private',
+    'publishConfig',
+  ];
+
+  // Keys from templatePackage that will be merged with appPackage
+  const templatePackageToMerge = ['dependencies', 'scripts'];
+
+  // Keys from templatePackage that will be added to appPackage,
+  // replacing any existing entries.
+  const templatePackageToReplace = Object.keys(templatePackage).filter(key => {
+    return (
+      !templatePackageBlacklist.includes(key) &&
+      !templatePackageToMerge.includes(key)
+    );
+  });
+
   // Copy over some of the devDependencies
   appPackage.dependencies = appPackage.dependencies || {};
 
   // Setup the script rules
-  // TODO: deprecate 'scripts' key directly on templateJson
-  const templateScripts = templatePackage.scripts || templateJson.scripts || {};
+  const templateScripts = templatePackage.scripts || {};
   appPackage.scripts = Object.assign(
     {
       start: 'react-scripts start',
@@ -161,9 +218,10 @@ module.exports = function(
   // Setup the browsers list
   appPackage.browserslist = defaultBrowsers;
 
-  // eslint-disable-next-line
-  const { dependencies, devDependencies, ...other } = templatePackage;
-  Object.assign(appPackage, merge(appPackage, other));
+  // Add templatePackage keys/values to appPackage, replacing existing entries
+  templatePackageToReplace.forEach(key => {
+    appPackage[key] = templatePackage[key];
+  });
 
   fs.writeFileSync(
     path.join(appPath, 'package.json'),
@@ -231,67 +289,40 @@ module.exports = function(
   let command;
   let remove;
   let args;
-  let devArgs;
 
   if (useYarn) {
     command = 'yarnpkg';
     remove = 'remove';
     args = ['add'];
-    devArgs = ['add', '--dev'];
   } else {
     command = 'npm';
     remove = 'uninstall';
     args = ['install', '--save', verbose && '--verbose'].filter(e => e);
-    devArgs = ['install', '--save-dev', verbose && '--verbose'].filter(e => e);
   }
 
-  // To make diffs cleaner, installDependencies and part2 are own functions.
-  for (const type of [['dependencies', args], ['devDependencies', devArgs]]) {
-    installDependencies(
-      { appPackage, command, templateJson, templateName, templatePackage },
-      type
-    );
-  }
-  part2({
-    appPath,
-    appName,
-    args,
-    command,
-    initializedGit,
-    originalDirectory,
-    readmeExists,
-    remove,
-    templateName,
-    useYarn,
+  // Install additional template dependencies, if present.
+  const dependenciesToInstall = Object.entries({
+    ...templatePackage.dependencies,
+    ...templatePackage.devDependencies,
   });
-};
-
-function installDependencies(
-  { appPackage, command, templateJson, templateName, templatePackage },
-  [dependencyType, args]
-) {
-  // Install additional template dependencies, if present
-  // TODO: deprecate 'dependencies' key directly on templateJson
-  const templateDependencies =
-    templatePackage[dependencyType] || templateJson[dependencyType];
-  if (templateDependencies) {
+  if (dependenciesToInstall.length) {
     args = args.concat(
-      Object.keys(templateDependencies).map(key => {
-        return `${key}@${templateDependencies[key]}`;
+      dependenciesToInstall.map(([dependency, version]) => {
+        return `${dependency}@${version}`;
       })
     );
   }
 
   // Install react and react-dom for backward compatibility with old CRA cli
   // which doesn't install react and react-dom along with react-scripts
-  if (!isReactInstalled(appPackage) && dependencyType === 'dependencies') {
+  if (!isReactInstalled(appPackage)) {
     args = args.concat(['react', 'react-dom']);
   }
 
   // Install template dependencies, and react and react-dom if missing.
   if ((!isReactInstalled(appPackage) || templateName) && args.length > 1) {
     console.log();
-    console.log(`Installing template ${dependencyType} using ${command}...`);
+    console.log(`Installing template dependencies using ${command}...`);
 
     const proc = spawn.sync(command, args, { stdio: 'inherit' });
     if (proc.status !== 0) {
@@ -299,20 +330,7 @@ function installDependencies(
       return;
     }
   }
-}
 
-function part2({
-  appPath,
-  appName,
-  args,
-  command,
-  initializedGit,
-  originalDirectory,
-  readmeExists,
-  remove,
-  templateName,
-  useYarn,
-}) {
   if (args.find(arg => arg.includes('typescript'))) {
     console.log();
     verifyTypeScriptSetup();
@@ -388,7 +406,7 @@ function part2({
   }
   console.log();
   console.log('Happy hacking!');
-}
+};
 
 function isReactInstalled(appPackage) {
   const dependencies = appPackage.dependencies || {};
