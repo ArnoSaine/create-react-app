@@ -10,7 +10,7 @@ A tiny fork of `react-scripts`. Allows using Babel config and modifying the buil
 npx create-react-app --scripts-version @arnosaine/react-scripts my-app
 ```
 
-### Replace official CRA in existing project
+### Replace official CRA in an existing project
 
 ```sh
 npm install @arnosaine/react-scripts
