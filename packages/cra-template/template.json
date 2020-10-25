@@ -10,9 +10,10 @@
     },
     "dependencies": {
       "@arnosaine/cra-template-helpers": "^0.2.0",
-      "@testing-library/react": "^9.3.2",
-      "@testing-library/jest-dom": "^4.2.4",
-      "@testing-library/user-event": "^7.1.2"
+      "@testing-library/jest-dom": "^5.11.4",
+      "@testing-library/react": "^11.1.0",
+      "@testing-library/user-event": "^12.1.10",
+      "web-vitals": "^0.2.4"
     },
     "devDependencies": {
       "dotenv-webpack": "1",
@@ -20,6 +21,7 @@
       "lint-staged": "8"
     },
     "eslintConfig": {
+      "extends": ["react-app", "react-app/jest"],
       "rules": {
         "react/react-in-jsx-scope": "off"
       }
