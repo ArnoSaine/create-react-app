@@ -1,11 +1,11 @@
 import { strict as assert } from 'assert';
-import requireResolveCwdSafe from './requireResolveCwdSafe';
+import requireResolveCwdSafe from '../requireResolveCwdSafe.js';
+import requireResolve from '../requireResolve.cjs';
 
 export default config => {
   const hasConfig = ['.babelrc', 'babel.config'].some(requireResolveCwdSafe);
-
   if (hasConfig) {
-    const babelLoader = require.resolve('babel-loader');
+    const babelLoader = requireResolve('babel-loader');
     for (const { oneOf } of config.module.rules) {
       if (oneOf) {
         for (const { loader, options } of oneOf) {

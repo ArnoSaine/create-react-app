@@ -1,8 +1,9 @@
 import path from 'path';
+import requireResolve from './requireResolve.cjs';
 
 export default requirePath => {
   try {
-    return require.resolve(path.join(process.cwd(), requirePath));
+    return requireResolve(path.join(process.cwd(), requirePath));
     // eslint-disable-next-line no-empty
   } catch (error) {}
 };

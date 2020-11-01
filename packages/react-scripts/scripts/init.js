@@ -416,3 +416,11 @@ function isReactInstalled(appPackage) {
     typeof dependencies['react-dom'] !== 'undefined'
   );
 }
+
+const _exports = module.exports;
+
+module.exports = async (...args) =>
+  (await import('@arnosaine/extend-react-scripts/init-script')).default(
+    _exports,
+    ...args
+  );

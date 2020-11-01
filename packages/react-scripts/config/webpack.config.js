@@ -783,4 +783,10 @@ module.exports = function (webpackEnv) {
   };
 };
 
-require('@arnosaine/extend-react-scripts').default(module);
+const _exports = module.exports;
+
+module.exports = async (...args) =>
+  (await import('@arnosaine/extend-react-scripts/webpack.config')).default(
+    _exports,
+    ...args
+  );

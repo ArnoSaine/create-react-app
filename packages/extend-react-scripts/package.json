@@ -11,13 +11,18 @@
   "bugs": {
     "url": "https://github.com/ArnoSaine/create-react-app/issues"
   },
-  "main": "lib",
-  "module": "src",
+  "type": "module",
+  "exports": {
+    "./init-script": "./initScript/main.js",
+    "./webpack.config": "./webpackConfig/main.js"
+  },
   "dependencies": {
-    "esm": "^3.2.25"
+    "fs-extra": "^9.0.1",
+    "lodash": "^4.17.20",
+    "react-dev-utils": "^11.0.0",
+    "sort-package-json": "^1.46.1"
   },
   "files": [
-    "lib",
     "src"
   ]
 }
