@@ -64,6 +64,7 @@ const argv = process.argv.slice(2);
 const writeStatsJson = argv.indexOf('--stats') !== -1;
 
 // Generate configuration
+(async () => {
 const config = await configFactory('production');
 
 // We require that you explicitly set browsers and do not fall back to
@@ -219,6 +220,7 @@ function build(previousFileSizes) {
     });
   });
 }
+})();
 
 function copyPublicFolder() {
   fs.copySync(paths.appPublic, paths.appBuild, {
