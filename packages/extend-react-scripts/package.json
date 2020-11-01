@@ -1,6 +1,6 @@
 {
   "name": "@arnosaine/extend-react-scripts",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Helper package for @arnosaine/react-scripts.",
   "repository": {
     "type": "git",
