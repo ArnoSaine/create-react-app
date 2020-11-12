@@ -1,6 +1,6 @@
 {
   "name": "@arnosaine/react-scripts",
-  "version": "4.0.0-3",
+  "version": "4.0.0-4",
   "description": "A tiny fork of react-scripts. Allows using Babel config and modifying the built-in Webpack config without ejecting.",
   "repository": {
     "type": "git",
