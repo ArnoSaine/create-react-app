@@ -125,23 +125,25 @@ module.exports = function (webpackEnv) {
         // package.json
         loader: require.resolve('postcss-loader'),
         options: {
-          // Necessary for external CSS imports to work
-          // https://github.com/facebook/create-react-app/issues/2677
-          ident: 'postcss',
-          plugins: () => [
-            require('postcss-flexbugs-fixes'),
-            require('postcss-preset-env')({
-              autoprefixer: {
-                flexbox: 'no-2009',
-              },
-              stage: 3,
-            }),
-            // Adds PostCSS Normalize as the reset css with default options,
-            // so that it honors browserslist config in package.json
-            // which in turn let's users customize the target behavior as per their needs.
-            postcssNormalize(),
-          ],
-          sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+          postcssOptions: {
+            plugins: [
+              require('postcss-flexbugs-fixes'),
+              [
+                require('postcss-preset-env'),
+                {
+                  autoprefixer: {
+                    flexbox: 'no-2009',
+                  },
+                  stage: 3,
+                },
+              ],
+              // Adds PostCSS Normalize as the reset css with default options,
+              // so that it honors browserslist config in package.json
+              // which in turn let's users customize the target behavior as per their needs.
+              postcssNormalize(),
+            ],
+          },
+          sourceMap: isEnvProduction && shouldUseSourceMap,
         },
       },
     ].filter(Boolean);
@@ -305,7 +307,7 @@ module.exports = function (webpackEnv) {
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
       splitChunks: {
         chunks: 'all',
-        name: false,
+        name: isEnvDevelopment,
       },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
@@ -757,6 +759,10 @@ module.exports = function (webpackEnv) {
         eslintPath: require.resolve('eslint'),
         context: paths.appSrc,
         cache: true,
+        cacheLocation: path.resolve(
+          paths.appNodeModules,
+          '.cache/.eslintcache'
+        ),
         // ESLint class options
         cwd: paths.appPath,
         resolvePluginsRelativeTo: __dirname,
