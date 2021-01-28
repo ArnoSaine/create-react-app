@@ -73,7 +73,7 @@ export default _env => config => {
 
 ```js
 import path from 'path';
-import paths from '@arnosaine/react-scripts/config/paths';
+import paths from '@arnosaine/react-scripts/config/paths.js';
 
 paths.appBuild = path.resolve(process.cwd(), 'other/output/path');
 
@@ -88,7 +88,8 @@ export default _env => config => {
 import path from 'path';
 
 export default env => config => {
-  const { oneOf: rules } = config.module.rules[2];
+  const { oneOf: rules } = config.module.rules.find(({ oneOf }) => oneOf);
+
   // Last rule should be original file-loader fallback. Insert new rules just
   // before last rule.
   rules.splice(rules.length - 2, 0, {
@@ -104,14 +105,15 @@ export default env => config => {
 
 ```js
 import path from 'path';
+import paths from '@arnosaine/react-scripts/config/paths.js';
 
 export default env => config => {
-  const { oneOf: rules } = config.module.rules[2];
-  const babel = rules[1];
-  const { include } = babel;
+  const babelLoaderAppSrc = config.module.rules
+    .find(({ oneOf }) => oneOf)
+    .oneOf.find(({ include }) => include === paths.appSrc);
 
-  babel.include = [
-    include,
+  babelLoaderAppSrc.include = [
+    babelLoaderAppSrc.include,
     path.join(process.cwd(), 'node_modules/some-package'),
   ];
 
